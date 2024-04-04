@@ -16,21 +16,21 @@ set.seed(20230712)  # Setting seed for reproducibility
 sample_count <- floor(0.8 * nrow(student_data))
 training <- sample(seq_len(nrow(student_data)), size = sample_count)
 
-train_data <- student_data[training]
-test_data <- student_data[-training]
+train_set <- student_data[training]
+test_set <- student_data[-training]
 
 # Building a logistic regression model with glm (Generalized Linear Model) in base R
-logit_model <- glm(is_passed ~ disability_status + imd_numeric, family = binomial(link = "logit"), data = train_data)
+logit_model <- glm(is_passed ~ disability_status + imd_numeric, family = binomial(link = "logit"), data = train_set)
 
 # Display Model Summary
 summary(logit_model)
 
 # Predicting on test data
-test_predictions <- predict(logit_model, test_data, type = "response")
+test_predictions <- predict(logit_model, test_set, type = "response")
 predicted_outcome <- ifelse(test_predictions > 0.5, 1, 0)
 
 # Calculating the Accuracy
-true_outcomes <- as.numeric(test_data$is_passed) - 1  # Adjusting factor levels from 1 to 0 and 1 for comparison
+true_outcomes <- as.numeric(test_set$is_passed) - 1  # Adjusting factor levels from 1 to 0 and 1 for comparison
 model_accuracy <- mean(predicted_outcome == true_outcomes)
 print(paste("Model Accuracy:", model_accuracy))
 
